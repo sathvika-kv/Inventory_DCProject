@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from fastapi import Request, UploadFile, File, HTTPException, APIRouter, Depends, Response
 import io
-from jwt_bearer import jwtBearer
+from routes.jwt_bearer import jwtBearer
 from sklearn.impute import SimpleImputer
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, PageBreak
