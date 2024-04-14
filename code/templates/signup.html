@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', path='todo/css/base.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', path='todo/css/bootstrap.css') }}">
+</head>
+<body>
+    <h1>Signup</h1>
+    <form id="signupForm">
+        <label for="fullname">Full Name:</label><br>
+        <input type="text" id="fullname" name="fullname"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <button type="submit">Sign Up</button>
+    </form>
+    <p id="tokenMessage"></p>
+
+    <script>
+        document.getElementById("signupForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch("/signup", {
+                method: "POST",
+                body: formData
+            });
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById("tokenMessage").innerText = `Generated Token: ${data.token}`;
+            } else {
+                const errorData = await response.json();
+                alert(`Error: ${errorData.detail}`);
+            }
+        });
+    </script>
+</body>
+</html>
+
+{% endblock %}

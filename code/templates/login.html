@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', path='todo/css/base.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', path='todo/css/bootstrap.css') }}">
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="loginForm">
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="pwd">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <button type="submit">Login</button>
+    </form>
+    <p id="tokenMessage"></p>
+
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            var obj = {};
+            formData.forEach((value, key) => obj[key] = value);
+            console.log(obj);
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(obj)
+            });
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById("tokenMessage").innerText = data.token.access_token;
+                //console.log("token"+response);
+                //window.location.href = "/inventory-analysis";
+                const res = await fetch("/inventory-analysis",{
+                    method:"GET",
+                    headers:{
+                        "Authorization": `Bearer ${data.token.access_token}`
+                    }
+                });
+                window.location.href = "/inventory-analysis";
+            } else {
+                const errorData = await response.json();
+                
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}
